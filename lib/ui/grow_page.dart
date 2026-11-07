@@ -6,9 +6,8 @@ import 'package:flutter/scheduler.dart';
 import '../core/weather.dart';
 import '../painters/grow_painter.dart';
 
-const Color gBg = Color(0xFFFBFAF8);
 const Color gInk = Color(0xFF3B3742);
-const Color gInk2 = Color(0xFF8A8490);
+const Color gInk2 = Color(0xFF6E6874);
 
 class GrowPage extends StatefulWidget {
   const GrowPage({super.key});
@@ -36,6 +35,9 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
   int _lastMs = 0;
   int _nextLeafAt = 0;
   int _weatherCheckAt = 0;
+
+  double _sceneH = 280;
+  double _unit = 2;
 
   @override
   void initState() {
@@ -82,20 +84,21 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
     if (mounted) setState(() {});
   }
 
+  double get _groundY => _sceneH - 40;
+
   void _updateParticles(double dt, int nowMs) {
     if (_wx.type == WeatherType.rain) {
-      while (_rain.length < 34) {
-        _rain.add(Drop(_rnd.nextDouble() * 160,
-            -40 + _rnd.nextDouble() * 180, 60 + _rnd.nextDouble() * 45,
-            2 + _rnd.nextDouble()));
+      while (_rain.length < 42) {
+        _rain.add(Drop(_rnd.nextDouble() * 160, _rnd.nextDouble() * _sceneH,
+            60 + _rnd.nextDouble() * 45, 2 + _rnd.nextDouble()));
       }
     } else {
       _rain.clear();
     }
     if (_wx.type == WeatherType.snow) {
-      while (_snow.length < 26) {
+      while (_snow.length < 30) {
         _snow.add(Flake(_rnd.nextDouble() * 160,
-            -30 + _rnd.nextDouble() * 170, 8 + _rnd.nextDouble() * 10,
+            _rnd.nextDouble() * _sceneH, 8 + _rnd.nextDouble() * 10,
             _rnd.nextDouble() * 6.28));
       }
     } else {
@@ -105,8 +108,8 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
     for (final d in _rain) {
       d.y += d.v * dt;
       d.x += 18 * dt;
-      if (d.y > 142) {
-        d.y = -6 - _rnd.nextDouble() * 34;
+      if (d.y > _sceneH - 30) {
+        d.y = -6 - _rnd.nextDouble() * 20;
         d.x = _rnd.nextDouble() * 160;
       }
       if (d.x > 164) d.x = -4;
@@ -114,15 +117,14 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
     for (final f in _snow) {
       f.y += f.v * dt;
       f.x += sin(nowMs / 1600 + f.phase) * 0.35;
-      if (f.y > 142) {
-        f.y = -6 - _rnd.nextDouble() * 24;
+      if (f.y > _sceneH - 28) {
+        f.y = -6 - _rnd.nextDouble() * 20;
         f.x = _rnd.nextDouble() * 160;
       }
       if (f.x < -4) f.x = 164;
       if (f.x > 164) f.x = -4;
     }
 
-    // 落叶 / 花瓣
     final spring = _wx.season == Season.spring;
     final autumn = _wx.season == Season.autumn;
     final cap = spring ? 6 : (autumn ? 7 : (_wx.season == Season.winter ? 2 : 4));
@@ -133,21 +135,24 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
           : (autumn ? const Color(0xFFE2B45E) : const Color(0xFFAECF9A));
       _leaves.add(Leaf(
         _rnd.nextDouble() * 144 + 8,
-        -10,
-        (_rnd.nextDouble() < 0.5 ? -1 : 1) * (1.2 + _rnd.nextDouble() * 2) * (0.7 + _windK * 0.5),
+        -6,
+        (_rnd.nextDouble() < 0.5 ? -1 : 1) *
+            (1.2 + _rnd.nextDouble() * 2) *
+            (0.7 + _windK * 0.5),
         3 + _rnd.nextDouble() * 4,
         _rnd.nextDouble() * 6.28,
         petal,
         color,
       ));
-      _nextLeafAt = nowMs + (spring ? 1500 : (autumn ? 900 : 2600)) +
+      _nextLeafAt = nowMs +
+          (spring ? 1500 : (autumn ? 900 : 2600)) +
           _rnd.nextInt(1200);
     }
     for (final l in _leaves) {
       l.x += l.vx * dt;
       l.y += (l.vy + sin(nowMs / 2100 + l.phase) * 0.6) * dt;
     }
-    _leaves.removeWhere((l) => l.y > 142 || l.x < -14 || l.x > 174);
+    _leaves.removeWhere((l) => l.y > _groundY + 4 || l.x < -14 || l.x > 174);
   }
 
   void _updateCat(int nowMs, double dt) {
@@ -163,15 +168,18 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
       return;
     }
     if (_wx.isRaining) {
-      // 雨天不散步：只坐、趴、睡
       final pick = _rnd.nextInt(3);
-      _setPose(nowMs, pick == 0 ? CatPose.lie : (pick == 1 ? CatPose.sleep : CatPose.sit),
+      _setPose(
+          nowMs,
+          pick == 0
+              ? CatPose.lie
+              : (pick == 1 ? CatPose.sleep : CatPose.sit),
           8 + _rnd.nextInt(10));
       return;
     }
     final pick = _rnd.nextInt(4);
     if (pick == 0) {
-      _targetX = 36 + _rnd.nextDouble() * 88;
+      _targetX = 24 + _rnd.nextDouble() * 112;
       _setPose(nowMs, CatPose.walk, 5);
     } else if (pick == 1) {
       _setPose(nowMs, CatPose.sit, 8 + _rnd.nextInt(12));
@@ -194,49 +202,60 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
     final weather = _wx.loaded ? _wx.type : WeatherType.sunny;
 
     return Scaffold(
-      backgroundColor: gBg,
-      body: SafeArea(
-        child: Column(
+      backgroundColor: const Color(0xFFFBFAF8),
+      body: LayoutBuilder(builder: (context, box) {
+        _unit = box.maxWidth / 160;
+        _sceneH = box.maxHeight / _unit;
+
+        return Stack(
           children: [
-            _header(season, weather),
-            Expanded(
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: 160 / 140,
-                  child: CustomPaint(
-                    painter: GrowPainter(Scene(
-                      season: season,
-                      weather: weather,
-                      time: DateTime.now(),
-                      catX: _catX,
-                      pose: _pose,
-                      umbrella: _umbrella,
-                      bob: _bob,
-                      rain: _rain,
-                      snow: _snow,
-                      leaves: _leaves,
-                      windK: _windK,
-                    )),
+            Positioned.fill(
+              child: CustomPaint(
+                painter: GrowPainter(Scene(
+                  season: season,
+                  weather: weather,
+                  time: DateTime.now(),
+                  catX: _catX,
+                  pose: _pose,
+                  umbrella: _umbrella,
+                  bob: _bob,
+                  rain: _rain,
+                  snow: _snow,
+                  leaves: _leaves,
+                  windK: _windK,
+                )),
+              ),
+            ),
+            Positioned.fill(
+              child: SafeArea(
+                child: Column(
+                children: [
+                  _header(season, weather),
+                  const Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 40 * _unit + 10),
+                    child: Text(
+                      '和小猫互动，可以提升好感度哦',
+                      style: TextStyle(
+                        fontSize: 11,
+                        letterSpacing: 1.2,
+                        color: gInk2.withOpacity(0.7),
+                      ),
+                    ),
                   ),
+                  ],
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 24),
-              child: Text(
-                '和小猫互动，可以提升好感度哦',
-                style: TextStyle(fontSize: 12, letterSpacing: 1.2, color: gInk2),
-              ),
-            ),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 
   Widget _header(Season season, WeatherType weather) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 6, 16, 0),
+      padding: const EdgeInsets.fromLTRB(6, 2, 14, 0),
       child: Row(
         children: [
           IconButton(
@@ -251,9 +270,16 @@ class _GrowPageState extends State<GrowPage> with SingleTickerProviderStateMixin
               ),
             ),
           ),
-          Text(
-            '${seasonName(season)} · ${weatherName(weather)}',
-            style: const TextStyle(fontSize: 11, color: gInk2),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.45),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              '${seasonName(season)} · ${weatherName(weather)}',
+              style: const TextStyle(fontSize: 10, color: gInk2),
+            ),
           ),
         ],
       ),
