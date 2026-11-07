@@ -75,7 +75,7 @@ class CatSprite {
     }
 
     void tri(List<List<int>> pts, int v) {
-      double sign(int ax, int ay, int bx, int by, int cx, int cy) =>
+      int sign(int ax, int ay, int bx, int by, int cx, int cy) =>
           (ax - cx) * (by - cy) - (bx - cx) * (ay - cy);
       final a = pts[0], b = pts[1], c = pts[2];
       for (var y = 0; y < h; y++) {
