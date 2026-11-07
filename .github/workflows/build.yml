@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,9 +37,17 @@ jobs:
       - name: Build debug APK
         run: flutter build apk --debug
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: daiyihui-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish APK to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: 待一会 build ${{ github.run_number }}
+          files: build/app/outputs/flutter-apk/app-debug.apk
+          generate_release_notes: false
