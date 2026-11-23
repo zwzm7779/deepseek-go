@@ -31,10 +31,16 @@ public class MainActivity extends android.app.Activity {
         s.setAllowContentAccess(true);
         s.setMediaPlaybackRequiresUserGesture(false);
         if (Build.VERSION.SDK_INT >= 21) s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        web.setWebViewClient(new WebViewClient());
+        web.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                view.loadUrl("file:///android_asset/index.html");
+            }
+        });
         web.addJavascriptInterface(new OrientationBridge(), "dshOrientation");
         setContentView(web);
-        web.loadUrl("file:///android_asset/index.html");
+        // 开发模式：优先加载本机服务器上的页面，便于快速迭代；不可用时自动回退到内置页面
+        web.loadUrl("http://127.0.0.1:8765/index.html");
     }
 
     private void applyBars() {
