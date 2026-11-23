@@ -46,7 +46,7 @@ public class MainActivity extends android.app.Activity {
         web.addJavascriptInterface(new OrientationBridge(), "dshOrientation");
         setContentView(web);
         // 开发模式：优先加载本机服务器上的页面，便于快速迭代；不可用时自动回退到内置页面
-        web.loadUrl("http://127.0.0.1:8765/index.html");
+        web.loadUrl("file:///android_asset/index.html");
         applyBars();
     }
 

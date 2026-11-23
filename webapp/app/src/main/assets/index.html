@@ -540,23 +540,17 @@ html[data-theme] .home-chat{background:var(--surface);border-color:var(--line);c
 .cd-list,.note-list,.plan-list{padding-bottom:20px}
 .link-card{touch-action:none;-webkit-user-select:none;user-select:none}
 @media (orientation: landscape){
-#s-grow{padding:2px 18px calc(env(safe-area-inset-bottom,0px) + 2px);box-sizing:border-box;overflow:hidden}
-#s-grow .setup-head{height:calc(env(safe-area-inset-top,0px) + 34px);flex:0 0 auto}
-#s-grow .setup-title{font-size:13px;letter-spacing:.28em}
+#s-grow{padding-top:max(env(safe-area-inset-top,0px),var(--sys-top,0px));padding-left:0;padding-right:0;overflow:hidden}
+#s-grow .setup-head{height:calc(env(safe-area-inset-top,0px) + 34px);flex:0 0 auto;padding:0 16px}
 #s-grow .grow-namewrap{position:absolute;right:16px;top:calc(env(safe-area-inset-top,0px) + 4px);left:auto;transform:none;margin:0;z-index:6}
-#s-grow .grow-namepill{height:30px;padding:0 12px}
-#s-grow .grow-nametext{font-size:12px}
-#s-grow .grow-edit-ic{width:11px;height:11px}
-#s-grow .grow-main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(190px,23vw,270px);grid-template-rows:minmax(0,1fr) auto;gap:6px 16px;margin:0;padding:2px 0 0}
-#s-grow #growCv{grid-column:1;grid-row:1/3;width:auto;height:100%;max-height:100%;max-width:100%;justify-self:center;align-self:center;min-height:0}
-#s-grow .grow-bottom{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:10px;min-height:0;padding:6px 0}
-#s-grow .grow-stat{width:100%}
-#s-grow .grow-fav-label{font-size:11px}
-#s-grow .grow-fav-num{font-size:12px}
-#s-grow .grow-bagbtn{width:44px;height:44px;border-radius:14px;align-self:flex-end;margin:2px 0 0}
-#s-grow .grow-bagic{width:22px;height:22px}
-#s-grow .grow-foot{grid-column:2;grid-row:2;margin:0;padding:0 0 2px;font-size:10.5px;text-align:center;line-height:1.4}
+#s-grow .grow-main{flex:1 1 auto;min-height:0;display:block;position:relative;overflow:hidden;margin:0;padding:0}
+#s-grow #growCv{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);width:100%;height:auto;max-width:none;min-height:0}
+#s-grow .grow-stat{display:none!important}
+#s-grow .grow-foot{display:none!important}
+#s-grow .grow-bottom{position:absolute;right:14px;bottom:8px;display:flex;flex-direction:row;align-items:center;gap:8px;width:auto;padding:0;background:transparent;z-index:5}
+#s-grow .grow-bagbtn{width:38px;height:38px;border-radius:12px;margin:0}
 }
+
 
 
 
