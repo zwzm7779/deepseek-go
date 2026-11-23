@@ -45,14 +45,24 @@ public class MainActivity extends android.app.Activity {
 
     private void applyBars() {
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Color.parseColor("#FBFAF8"));
-            getWindow().setNavigationBarColor(Color.parseColor("#FBFAF8"));
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.TRANSPARENT);
         }
         if (Build.VERSION.SDK_INT >= 23) {
             View v = getWindow().getDecorView();
-            int f = v.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            int f = v.getSystemUiVisibility()
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             if (Build.VERSION.SDK_INT >= 26) f |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
             v.setSystemUiVisibility(f);
+            web.post(new Runnable() {
+                public void run() {
+                    int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                    int h = (id > 0) ? getResources().getDimensionPixelSize(id) : (int) (24 * getResources().getDisplayMetrics().density);
+                    web.evaluateJavascript("document.documentElement.style.setProperty('--sys-top','" + h + "px')", null);
+                }
+            });
         }
     }
 
