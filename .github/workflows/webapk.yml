@@ -21,11 +21,12 @@ jobs:
           gradle-version: '8.7'
       - name: Build APK
         run: cd webapp && gradle assembleDebug --no-daemon --stacktrace
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: web-${{ github.run_number }}
-          name: 待一会 WebAPK ${{ github.run_number }}
-          files: webapp/app/build/outputs/apk/debug/app-debug.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish APK to branch
+        run: |
+          mkdir -p apk-latest
+          cp webapp/app/build/outputs/apk/debug/app-debug.apk apk-latest/app-debug.apk
+          git config user.name ci
+          git config user.email ci@example.com
+          git add apk-latest/app-debug.apk
+          git commit -m "apk ${GITHUB_RUN_NUMBER} [skip ci]" || true
+          git push -f origin HEAD:apk-bin
