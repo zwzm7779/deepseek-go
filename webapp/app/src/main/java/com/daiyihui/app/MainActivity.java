@@ -21,7 +21,6 @@ public class MainActivity extends android.app.Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        applyBars();
         web = new WebView(this);
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -41,6 +40,7 @@ public class MainActivity extends android.app.Activity {
         setContentView(web);
         // 开发模式：优先加载本机服务器上的页面，便于快速迭代；不可用时自动回退到内置页面
         web.loadUrl("http://127.0.0.1:8765/index.html");
+        applyBars();
     }
 
     private void applyBars() {
@@ -56,7 +56,7 @@ public class MainActivity extends android.app.Activity {
                     | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             if (Build.VERSION.SDK_INT >= 26) f |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
             v.setSystemUiVisibility(f);
-            web.post(new Runnable() {
+            if (web != null) web.post(new Runnable() {
                 public void run() {
                     int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
                     int h = (id > 0) ? getResources().getDimensionPixelSize(id) : (int) (24 * getResources().getDisplayMetrics().density);
@@ -81,7 +81,6 @@ public class MainActivity extends android.app.Activity {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
                     } else {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        applyBars();
                     }
                 }
             });
