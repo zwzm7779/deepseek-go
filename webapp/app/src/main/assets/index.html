@@ -540,16 +540,21 @@ html[data-theme] .home-chat{background:var(--surface);border-color:var(--line);c
 .cd-list,.note-list,.plan-list{padding-bottom:20px}
 .link-card{touch-action:none;-webkit-user-select:none;user-select:none}
 @media (orientation: landscape){
-#s-grow{padding-top:max(env(safe-area-inset-top,0px),var(--sys-top,0px));padding-left:0;padding-right:0;overflow:hidden}
-#s-grow .setup-head{height:calc(env(safe-area-inset-top,0px) + 34px);flex:0 0 auto;padding:0 16px}
-#s-grow .grow-namewrap{position:absolute;right:16px;top:calc(env(safe-area-inset-top,0px) + 4px);left:auto;transform:none;margin:0;z-index:6}
-#s-grow .grow-main{flex:1 1 auto;min-height:0;display:block;position:relative;overflow:hidden;margin:0;padding:0}
-#s-grow #growCv{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:75vw;max-width:100%;height:auto;max-height:none;min-height:0}
+#s-grow{padding:0;overflow:hidden}
+#s-grow .setup-head{position:absolute;top:calc(env(safe-area-inset-top,0px) + 4px);left:0;right:0;height:46px;padding:0 16px;display:flex;align-items:center;justify-content:center;z-index:8;background:transparent}
+#s-grow .setup-title{font-size:13px;letter-spacing:.3em;text-indent:.3em}
+#s-grow .ghost-back{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:42px;height:42px;display:flex;align-items:center;justify-content:center}
+#s-grow .grow-namewrap{position:absolute;right:16px;top:calc(env(safe-area-inset-top,0px) + 6px);margin:0;z-index:9}
+#s-grow .grow-namepill{height:32px;padding:0 14px}
+#s-grow .grow-main{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 52px);bottom:calc(env(safe-area-inset-bottom,0px) + 54px);margin:0;padding:0;overflow:hidden}
+#s-grow #growCv{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:75vw;max-width:100%;height:auto;max-height:100%}
 #s-grow .grow-stat{display:none!important}
 #s-grow .grow-foot{display:none!important}
-#s-grow .grow-bottom{position:absolute;right:14px;bottom:8px;display:flex;flex-direction:row;align-items:center;gap:8px;width:auto;padding:0;background:transparent;z-index:5}
-#s-grow .grow-bagbtn{width:38px;height:38px;border-radius:12px;margin:0}
+#s-grow .grow-bottom{position:absolute;right:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);display:flex;align-items:center;width:auto;padding:0;background:transparent;z-index:9}
+#s-grow .grow-bagbtn{width:40px;height:40px;border-radius:13px;margin:0}
+#s-grow .grow-bagic{width:22px;height:22px}
 }
+
 
 
 
