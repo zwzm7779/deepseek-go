@@ -3,7 +3,10 @@ package com.daiyihui.app;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,6 +21,7 @@ public class MainActivity extends android.app.Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        applyBars();
         web = new WebView(this);
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -33,6 +37,25 @@ public class MainActivity extends android.app.Activity {
         web.loadUrl("file:///android_asset/index.html");
     }
 
+    private void applyBars() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(Color.parseColor("#FBFAF8"));
+            getWindow().setNavigationBarColor(Color.parseColor("#FBFAF8"));
+        }
+        if (Build.VERSION.SDK_INT >= 23) {
+            View v = getWindow().getDecorView();
+            int f = v.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            if (Build.VERSION.SDK_INT >= 26) f |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            v.setSystemUiVisibility(f);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        applyBars();
+    }
+
     public class OrientationBridge {
         @JavascriptInterface
         public void setOrientation(final String mode) {
@@ -42,6 +65,7 @@ public class MainActivity extends android.app.Activity {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
                     } else {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        applyBars();
                     }
                 }
             });

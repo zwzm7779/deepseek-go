@@ -540,15 +540,22 @@ html[data-theme] .home-chat{background:var(--surface);border-color:var(--line);c
 .cd-list,.note-list,.plan-list{padding-bottom:20px}
 .link-card{touch-action:none;-webkit-user-select:none;user-select:none}
 @media (orientation: landscape){
-#s-grow{display:flex;flex-direction:column;height:100vh;height:100dvh;padding:6px 18px calc(env(safe-area-inset-bottom,0px) + 6px);box-sizing:border-box;overflow:hidden}
-#s-grow .setup-head{height:calc(env(safe-area-inset-top,0px) + 40px);flex:0 0 auto}
-#s-grow .grow-namewrap{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:5;margin:0;flex:0 0 auto}
-#s-grow .grow-main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(220px,26vw,320px);grid-template-rows:minmax(0,1fr) auto;gap:10px 18px;margin:0;padding:0}
-#s-grow #growCv{grid-column:1;grid-row:1/3;width:100%;height:100%;min-height:0;max-height:100%;overflow:hidden}
-#s-grow .grow-bottom{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;min-height:0;overflow-y:auto}
+#s-grow{padding:2px 18px calc(env(safe-area-inset-bottom,0px) + 2px);box-sizing:border-box;overflow:hidden}
+#s-grow .setup-head{height:calc(env(safe-area-inset-top,0px) + 34px);flex:0 0 auto}
+#s-grow .setup-title{font-size:13px;letter-spacing:.28em}
+#s-grow .grow-namewrap{position:absolute;right:16px;top:calc(env(safe-area-inset-top,0px) + 4px);left:auto;transform:none;margin:0;z-index:6}
+#s-grow .grow-namepill{height:30px;padding:0 12px}
+#s-grow .grow-nametext{font-size:12px}
+#s-grow .grow-edit-ic{width:11px;height:11px}
+#s-grow .grow-main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(190px,23vw,270px);grid-template-rows:minmax(0,1fr) auto;gap:6px 16px;margin:0;padding:2px 0 0}
+#s-grow #growCv{grid-column:1;grid-row:1/3;width:auto;height:100%;max-height:100%;max-width:100%;justify-self:center;align-self:center;min-height:0}
+#s-grow .grow-bottom{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:10px;min-height:0;padding:6px 0}
 #s-grow .grow-stat{width:100%}
-#s-grow .grow-bagbtn{width:100%;height:44px;border-radius:14px}
-#s-grow .grow-foot{grid-column:2;grid-row:2;margin:0;font-size:11px;text-align:center;padding:4px 0}
+#s-grow .grow-fav-label{font-size:11px}
+#s-grow .grow-fav-num{font-size:12px}
+#s-grow .grow-bagbtn{width:44px;height:44px;border-radius:14px;align-self:flex-end;margin:2px 0 0}
+#s-grow .grow-bagic{width:22px;height:22px}
+#s-grow .grow-foot{grid-column:2;grid-row:2;margin:0;padding:0 0 2px;font-size:10.5px;text-align:center;line-height:1.4}
 }
 
 
@@ -917,7 +924,6 @@ var screens={home:$('#s-home'),setup:$('#s-setup'),log:$('#s-log'),plan:$('#s-pl
 var current='home';
 var focusLoopRunning=false,growLoopRunning=false;
 function show(name){if(name==='icon')return;if(current===name)return;if(current==='home'&&name!=='home'){try{petHomeClear()}catch(a){}}if(screens[current])screens[current].classList.remove('active');screens[name].classList.add('active');current=name;updateBackGuard();ndScreenUpdate();if(name==='focus'&&!focusLoopRunning){focusLoopRunning=true;lastNow=0;requestAnimationFrame(loop)}if(name==='grow'&&!growLoopRunning){growLoopRunning=true;gLast=0;requestAnimationFrame(growLoop)}
-if(current==='grow'&&name!=='grow'){try{nativeOrientation('portrait')}catch(e){}}
 try{growLandscapeRefresh()}catch(e){}
 if(current==='grow'&&name!=='grow'){try{nativeOrientation('portrait')}catch(e){}}if(name==='home'){try{petHomeStart()}catch(e){}}}
 var backGuard=false;
@@ -1295,7 +1301,7 @@ function renderBagPage(){ensureDailyItems();var dog=isDog(),fn=$('#bagFoodName')
 function renderBagGifts(){var wrap=document.querySelector('#s-bag .bag-items');if(!wrap)return;var olds=wrap.querySelectorAll('.bag-gift');for(var i=0;i<olds.length;i++)wrap.removeChild(olds[i]);if(Object.prototype.toString.call(bag.gifts)!=='[object Array]')return;for(var k=0;k<bag.gifts.length;k++){(function(entry){var gd=giftMetaById(entry.gid)||{},b=document.createElement('button');b.className='bag-item bag-gift';var cv=document.createElement('canvas');cv.width=36;cv.height=27;b.appendChild(cv);var nm=document.createElement('span');nm.className='bag-item-name';nm.textContent=entry.name||gd.name||'礼物';b.appendChild(nm);var c=cv.getContext('2d');c.clearRect(0,0,36,27);drawGiftSprite(c,entry.gid,18,13,2.6,false);b.addEventListener('click',function(){openGiftEntry(entry.iid)});wrap.appendChild(b)})(bag.gifts[k])}}
 function growReset(){gState='idle';gHoldStart=0;gPetStart=0;gPhaseAt=0;gRelStart=0;gPetPhase='';gPrevBehavior='';gNuzzle=0;gHeadUp=0;gLean=0;gPointerX=80;gHearts=[];gZs=[];gNextHeart=0;gNextZ=0;gLeaves=[];gNextLeaf=0;gThoughts=[];gCalls=[];gMarks=[];gNextThink=0;gNextCall=0;gLastTouch=performance.now();gTapCount=0;gTapResetAt=0;gCarryKind=null;gCarryDrag=false;gCarryReturning=false;gCarryX=138;gCarryY=127;gFeedPhase='';gFeedAt=0;gFeedBubbled=false;gGift.active=false;gGift.phase='';gGift.lv=0;gGift.placed=false;gGift.justPlacedAt=0;gCatX=80;gCatDir=1;gCatPhase=0;gLookDx=null;gTailAcc=0;gFlickUntil=0;gNextFlick=0;gBlinkUntil=0;gNextBlink=0;gEarUntil=0;gNextEar=0;gLiftX=0;gLiftY=0;gLiftTX=0;gLiftTY=0;gLandDip=0;gHoldUpper=false;gHoldPixel=false;gFallV=0;gFallBounces=0;growSetBehavior('look',performance.now(),rand(2600,4200))}
 function nativeOrientation(mode){try{if(window.dshOrientation&&window.dshOrientation.setOrientation)window.dshOrientation.setOrientation(mode)}catch(e){}}
-function openGrow(){ensureDailyItems();growReset();ensureGiftForPet(curPet.id,growOf(curPet.id));renderGrowName();renderGrowStat();show('grow');try{nativeOrientation('auto')}catch(e){}}
+function openGrow(){ensureDailyItems();growReset();ensureGiftForPet(curPet.id,growOf(curPet.id));renderGrowName();renderGrowStat();show('grow')}
 $('#btnGrow').addEventListener('click',function(e){e.stopPropagation();openGrow()});
 $('#btnGrowBack').addEventListener('click',function(){gCarryDrag=false;gState='idle';gFeedPhase='';gHearts=[];gThoughts=[];gCalls=[];gMarks=[];show('home')});
 $('#btnBag').addEventListener('click',function(){gCarryDrag=false;renderBagPage();show('bag')});
